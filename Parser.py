@@ -3,26 +3,7 @@ from bs4 import BeautifulSoup
 import requests
 import json
 
-# -------------------------Getting data section
-
-
-def getSiteData(num):
-    data = requests.get(
-        f"https://www.imdb.com/search/title/?groups=top_1000&start={num}&ref_=adv_nxt")
-    return (str(data.content))
-
-
-num = 1
-text = getSiteData(num)
-with open("sitedata.txt", "w+", encoding="utf-8") as file:
-    file.write(text)
-
-input("is everything okey?")
-
-# -------------------------Data parse Section
-
 doc = ""
-
 
 with open("sitedata.txt", "r+", encoding="utf-8")as file:
     doc = file.read()
@@ -92,13 +73,14 @@ def InfoParser(bs):
     return myDict
 
 
-bs = BeautifulSoup(doc, 'html.parser')
-films = parser(bs, "div", "lister-item mode-advanced")
-arr = []
-for i in films:
-    # convert to bs4 object
-    arr.append(InfoParser(BeautifulSoup(str(i), 'html.parser')))
-jsonData = json.dumps(arr)
+def start():
+    bs = BeautifulSoup(doc, 'html.parser')
+    films = parser(bs, "div", "lister-item mode-advanced")
+    arr = []
+    for i in films:
+        # convert to bs4 object
+        arr.append(InfoParser(BeautifulSoup(str(i), 'html.parser')))
+    jsonData = json.dumps(arr)
 
-with open("MovieData.json", "w+", encoding="utf-8") as file:
-    file.write(jsonData)
+    with open("MovieData.json", "w+", encoding="utf-8") as file:
+        file.write(jsonData)
